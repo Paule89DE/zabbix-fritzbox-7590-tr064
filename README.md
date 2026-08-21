@@ -42,15 +42,6 @@ Example DSL values during testing:
 - Downstream SNR margin: ~10 dB
 - Upstream SNR margin: ~7 dB
 
-## Installation
-
-1. Download `template_fritzbox_7590_tr064.yaml`.
-2. Import the template into Zabbix.
-3. Create a host for your FRITZ!Box.
-4. Set the host interface address to the IP address of your FRITZ!Box.
-5. Link the template `FRITZBox 7590 TR-064` to the host.
-6. Wait for the first polling interval.
-
 No Zabbix agent is required on the FRITZ!Box.
 
 The template uses:
@@ -65,6 +56,58 @@ It therefore works with custom network configurations such as:
 - `192.168.1.1`
 - `10.0.0.1`
 - other custom FRITZ!Box addresses
+  
+## Installation
+
+1. Download `template_fritzbox_7590_tr064.yaml`.
+2. Import the template into Zabbix.
+3. Create a host for your FRITZ!Box.
+4. Under **Interfaces**, add an **Agent** interface.
+5. Enter the IP address of your FRITZ!Box, for example `192.168.178.1`.
+6. Keep **Connect to: IP** selected.
+7. The Agent port `10050` can remain unchanged. No Zabbix agent actually needs to run on the FRITZ!Box.
+8. Link the template `FRITZBox 7590 TR-064` to the host.
+9. Wait for the first polling interval.
+
+The Agent interface is only used to provide the FRITZ!Box address for the `{HOST.CONN}` macro.
+
+The template itself communicates directly with the FRITZ!Box via HTTP on TCP port `49000`.
+
+No Zabbix agent needs to be installed or running on the FRITZ!Box.
+
+## Troubleshooting
+
+### `Could not connect to server`
+
+During development and testing, Zabbix occasionally reported errors similar to:
+
+`Cannot perform request: Failed to connect to <FRITZ!Box-IP>:49000: Could not connect to server`
+
+although the FRITZ!Box was reachable and the HTTP item test worked correctly.
+
+In the tested Docker installation, restarting the **Zabbix Server container** resolved the issue.
+
+Example:
+
+```bash
+docker restart zabbix-server
+```
+
+After the restart, the HTTP items started collecting data normally again.
+
+Before restarting Zabbix, it is recommended to verify that the Zabbix Server itself can reach the FRITZ!Box on TCP port `49000`.
+
+For Docker installations, this can be tested from inside the Zabbix Server container, for example:
+
+```bash
+docker exec -it zabbix-server sh
+wget -O- http://192.168.178.1:49000/igddesc.xml
+```
+
+If XML data is returned, network connectivity between the Zabbix Server container and the FRITZ!Box is working.
+
+This behavior was observed during testing and may be related to Zabbix configuration/cache state rather than the FRITZ!Box itself.
+
 
 ## Interfaces used
 
