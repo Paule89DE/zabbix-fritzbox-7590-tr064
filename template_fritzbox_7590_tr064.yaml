@@ -149,35 +149,6 @@ zabbix_export:
             - name: SOAPAction
               value: '"urn:dslforum-org:service:WANDSLInterfaceConfig:1#X_AVM-DE_GetDSLInfo"'
           request_method: POST
-        - uuid: daf347355b8342e3b74adf7dc03f66ae
-          name: 'FRITZ!Box DSL Current Sync Upload'
-          type: HTTP_AGENT
-          key: fritz.dsl.sync.up
-          trends: '0'
-          units: bps
-          preprocessing:
-            - type: XMLPATH
-              parameters:
-                - number(//NewUpstreamCurrRate)
-            - type: MULTIPLIER
-              parameters:
-                - '1000'
-          url: 'http://{HOST.CONN}:49000/upnp/control/wandslifconfig1'
-          post_type: XML
-          posts: |
-            <?xml version="1.0" encoding="utf-8"?>
-            <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
-             s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-            <s:Body>
-            <u:X_AVM-DE_GetDSLInfo xmlns:u="urn:dslforum-org:service:WANDSLInterfaceConfig:1"></u:X_AVM-DE_GetDSLInfo>
-            </s:Body>
-            </s:Envelope>
-          headers:
-            - name: Content-Type
-              value: 'text/xml; charset=utf-8'
-            - name: SOAPAction
-              value: '"urn:dslforum-org:service:WANDSLInterfaceConfig:1#X_AVM-DE_GetDSLInfo"'
-          request_method: POST
         - uuid: 4f66fc5db33e45bd87aa55d7a49edc0e
           name: 'FRITZ!Box DSL Max Sync Download'
           type: HTTP_AGENT
@@ -217,6 +188,35 @@ zabbix_export:
             - type: XMLPATH
               parameters:
                 - number(//NewUpstreamMaxRate)
+            - type: MULTIPLIER
+              parameters:
+                - '1000'
+          url: 'http://{HOST.CONN}:49000/upnp/control/wandslifconfig1'
+          post_type: XML
+          posts: |
+            <?xml version="1.0" encoding="utf-8"?>
+            <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+             s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+            <s:Body>
+            <u:X_AVM-DE_GetDSLInfo xmlns:u="urn:dslforum-org:service:WANDSLInterfaceConfig:1"></u:X_AVM-DE_GetDSLInfo>
+            </s:Body>
+            </s:Envelope>
+          headers:
+            - name: Content-Type
+              value: 'text/xml; charset=utf-8'
+            - name: SOAPAction
+              value: '"urn:dslforum-org:service:WANDSLInterfaceConfig:1#X_AVM-DE_GetDSLInfo"'
+          request_method: POST
+        - uuid: daf347355b8342e3b74adf7dc03f66ae
+          name: 'FRITZ!Box DSL Current Sync Upload'
+          type: HTTP_AGENT
+          key: fritz.dsl.sync.up
+          trends: '0'
+          units: bps
+          preprocessing:
+            - type: XMLPATH
+              parameters:
+                - number(//NewUpstreamCurrRate)
             - type: MULTIPLIER
               parameters:
                 - '1000'
@@ -294,3 +294,245 @@ zabbix_export:
             - name: SOAPAction
               value: '"urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1#GetAddonInfos"'
           request_method: POST
+      dashboards:
+        - uuid: 5d34e9e4adaf43629ac6e94740e280e3
+          name: 'FRITZ!Box Overview'
+          pages:
+            - widgets:
+                - type: svggraph
+                  name: 'WAN Traffic'
+                  x: '1'
+                  width: '70'
+                  height: '5'
+                  fields:
+                    - type: STRING
+                      name: ds.0.color
+                      value: FF465C
+                    - type: INTEGER
+                      name: ds.0.fill
+                      value: '1'
+                    - type: STRING
+                      name: ds.0.items.0
+                      value: 'FRITZ!Box WAN Download'
+                    - type: INTEGER
+                      name: ds.0.transparency
+                      value: '2'
+                    - type: INTEGER
+                      name: ds.0.width
+                      value: '2'
+                    - type: STRING
+                      name: ds.1.color
+                      value: FFD54F
+                    - type: INTEGER
+                      name: ds.1.fill
+                      value: '1'
+                    - type: STRING
+                      name: ds.1.items.0
+                      value: 'FRITZ!Box WAN Upload'
+                    - type: INTEGER
+                      name: ds.1.transparency
+                      value: '2'
+                    - type: INTEGER
+                      name: ds.1.width
+                      value: '2'
+                    - type: INTEGER
+                      name: legend_lines
+                      value: '2'
+                    - type: INTEGER
+                      name: legend_lines_mode
+                      value: '1'
+                    - type: INTEGER
+                      name: legend_statistic
+                      value: '1'
+                    - type: STRING
+                      name: reference
+                      value: DVBQZ
+                    - type: INTEGER
+                      name: rf_rate
+                      value: '30'
+                    - type: INTEGER
+                      name: righty
+                      value: '0'
+                - type: svggraph
+                  name: 'DSL Sync'
+                  x: '1'
+                  'y': '5'
+                  width: '70'
+                  height: '5'
+                  fields:
+                    - type: STRING
+                      name: ds.0.color
+                      value: FF465C
+                    - type: INTEGER
+                      name: ds.0.fill
+                      value: '1'
+                    - type: STRING
+                      name: ds.0.items.0
+                      value: 'FRITZ!Box DSL Current Sync Download'
+                    - type: INTEGER
+                      name: ds.0.transparency
+                      value: '2'
+                    - type: INTEGER
+                      name: ds.0.width
+                      value: '2'
+                    - type: STRING
+                      name: ds.1.color
+                      value: FFD54F
+                    - type: INTEGER
+                      name: ds.1.fill
+                      value: '2'
+                    - type: STRING
+                      name: ds.1.items.0
+                      value: 'FRITZ!Box DSL Current Sync Upload'
+                    - type: INTEGER
+                      name: ds.1.transparency
+                      value: '2'
+                    - type: INTEGER
+                      name: ds.1.width
+                      value: '2'
+                    - type: STRING
+                      name: ds.2.color
+                      value: 0EC9AC
+                    - type: INTEGER
+                      name: ds.2.fill
+                      value: '2'
+                    - type: STRING
+                      name: ds.2.items.0
+                      value: 'FRITZ!Box DSL Max Sync Download'
+                    - type: INTEGER
+                      name: ds.2.transparency
+                      value: '2'
+                    - type: INTEGER
+                      name: ds.2.width
+                      value: '2'
+                    - type: STRING
+                      name: ds.3.color
+                      value: 524BBC
+                    - type: INTEGER
+                      name: ds.3.fill
+                      value: '2'
+                    - type: STRING
+                      name: ds.3.items.0
+                      value: 'FRITZ!Box DSL Max Sync Upload'
+                    - type: INTEGER
+                      name: ds.3.transparency
+                      value: '2'
+                    - type: INTEGER
+                      name: ds.3.width
+                      value: '2'
+                    - type: INTEGER
+                      name: legend_lines
+                      value: '4'
+                    - type: INTEGER
+                      name: legend_lines_mode
+                      value: '1'
+                    - type: INTEGER
+                      name: legend_statistic
+                      value: '1'
+                    - type: STRING
+                      name: reference
+                      value: SCRDU
+                    - type: INTEGER
+                      name: rf_rate
+                      value: '30'
+                    - type: INTEGER
+                      name: righty
+                      value: '0'
+                - type: svggraph
+                  name: 'DSL SNR'
+                  x: '1'
+                  'y': '10'
+                  width: '70'
+                  height: '5'
+                  fields:
+                    - type: STRING
+                      name: ds.0.color
+                      value: FF465C
+                    - type: INTEGER
+                      name: ds.0.fill
+                      value: '1'
+                    - type: STRING
+                      name: ds.0.items.0
+                      value: 'FRITZ!Box DSL SNR Download'
+                    - type: INTEGER
+                      name: ds.0.width
+                      value: '2'
+                    - type: STRING
+                      name: ds.1.color
+                      value: FFD54F
+                    - type: INTEGER
+                      name: ds.1.fill
+                      value: '1'
+                    - type: STRING
+                      name: ds.1.items.0
+                      value: 'FRITZ!Box DSL SNR Upload'
+                    - type: INTEGER
+                      name: ds.1.width
+                      value: '2'
+                    - type: INTEGER
+                      name: legend_lines
+                      value: '2'
+                    - type: INTEGER
+                      name: legend_lines_mode
+                      value: '1'
+                    - type: INTEGER
+                      name: legend_statistic
+                      value: '1'
+                    - type: STRING
+                      name: reference
+                      value: EFEOS
+                    - type: INTEGER
+                      name: rf_rate
+                      value: '30'
+                    - type: INTEGER
+                      name: righty
+                      value: '0'
+                - type: svggraph
+                  name: 'DSL Errors'
+                  x: '1'
+                  'y': '15'
+                  width: '70'
+                  height: '5'
+                  fields:
+                    - type: STRING
+                      name: ds.0.color
+                      value: FF465C
+                    - type: INTEGER
+                      name: ds.0.fill
+                      value: '1'
+                    - type: STRING
+                      name: ds.0.items.0
+                      value: 'FRITZ!Box DSL FEC Errors'
+                    - type: INTEGER
+                      name: ds.0.width
+                      value: '2'
+                    - type: STRING
+                      name: ds.1.color
+                      value: FFD54F
+                    - type: INTEGER
+                      name: ds.1.fill
+                      value: '1'
+                    - type: STRING
+                      name: ds.1.items.0
+                      value: 'FRITZ!Box DSL CRC Errors'
+                    - type: INTEGER
+                      name: ds.1.width
+                      value: '2'
+                    - type: INTEGER
+                      name: legend_lines
+                      value: '2'
+                    - type: INTEGER
+                      name: legend_lines_mode
+                      value: '1'
+                    - type: INTEGER
+                      name: legend_statistic
+                      value: '1'
+                    - type: STRING
+                      name: reference
+                      value: SEZKZ
+                    - type: INTEGER
+                      name: rf_rate
+                      value: '30'
+                    - type: INTEGER
+                      name: righty
+                      value: '0'
