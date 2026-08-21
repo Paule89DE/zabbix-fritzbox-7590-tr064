@@ -1,0 +1,1 @@
+# zabbix-fritzbox-7590-tr064
